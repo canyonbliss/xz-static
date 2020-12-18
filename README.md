@@ -85,14 +85,12 @@ popd
 wget https://tukaani.org/xz/xz-5.2.5.tar.gz
 tar xvf xz-5.2.5.tar.gz
 pushd ./xz-5.2.5/
-    ./configure --disable-debug --disable-dependency-tracking --disable-silent-rules --disable-shared --disable-nls
-    make
+    ./configure CFLAGS="-static" --program-prefix=  --prefix=/usr --exec-prefix=/usr --bindir=/usr/bin --sbindir=/usr/sbin --sysconfdir=/etc --datadir=/usr/share --includedir=/usr/include --libdir=/usr/lib --libexecdir=/usr/libexec --localstatedir=/var --sharedstatedir=/var/lib --mandir=/usr/share/man --infodir=/usr/share/info --disable-debug --disable-dependency-tracking --disable-silent-rules --disable-shared --disable-nls
+    make LDFLAGS="-all-static"
 
-    mkdir ./xz-5.2.5-linux-x86_64
-    rsync -av ./src/xz/xz ./xz-5.2.5-linux-x86_64/
-    rsync -av ./src/xzdec/xzdec ./xz-5.2.5-linux-x86_64/
-    #ln -s xz ./xz-5.2.5-linux-x86_64/unxz
-    tar cvf ./xz-5.2.5-linux-x86_64.tar.gz ./xz-5.2.5-linux-x86_64
+    mkdir ./xz-5.2.5-linux-$(uname -m)
+    make DESTDIR=${PWD}/xz-5.2.5-linux-$(uname -m)/ install
+    tar -cvjf xz-5.2.5-linux-$(uname -m).tar.bz2 -C xz-5.2.5-linux-$(uname -m)/ usr
 popd
 ```
 
